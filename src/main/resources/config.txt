@@ -1,0 +1,5 @@
+boardSize: 3
+
+firstPlayerSymbol: a
+secondPlayerSymbol: b
+computerSymbol: c
