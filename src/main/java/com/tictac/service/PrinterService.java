@@ -13,5 +13,6 @@ public interface PrinterService {
     void printUpdatedBoardMessage(Board board);
     void printPlayerTurn(ConstsEnum player);
     void printCoordinatesOutOfBoundsException();
+    void printPlayerWonTheGame(Board board);
 
 }

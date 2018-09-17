@@ -10,5 +10,6 @@ public interface BoardService {
     Board fillBoardEntity() throws IOException;
     boolean validateIfBoardPositionIsEmpty(Board board, int[] position);
     void registerPlayPosition(Board board, int [] position, ConstsEnum player);
+    void checkIfPlayerWonTheGame(Board board);
 
 }

@@ -60,4 +60,10 @@ public class PrinterServiceImpl implements PrinterService {
         System.out.println("Type a valid position");
     }
 
+    public void printPlayerWonTheGame(Board board){
+        System.out.println("\n\nGame Over !!!");
+        printTicTacBoard(board);
+        System.out.println("\nPlayer with the symbol " + board.getWinner().concat(" won the game !\n\n"));
+    }
+
 }

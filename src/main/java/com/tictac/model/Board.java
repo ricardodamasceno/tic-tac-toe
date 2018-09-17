@@ -6,6 +6,7 @@ public class Board {
     private Integer boardSize;
     private boolean gameOver = false;
 
+    private String winner = "";
     private String symbolPlayer1 = "";
     private String symbolPlayer2 = "";
     private String symbolComputer = "";
@@ -58,4 +59,11 @@ public class Board {
         this.symbolComputer = symbolComputer;
     }
 
+    public String getWinner() {
+        return winner;
+    }
+
+    public void setWinner(String winner) {
+        this.winner = winner;
+    }
 }

@@ -70,7 +70,10 @@ public class PlayerServiceImpl implements PlayerService {
             }
         } while (!validValue);
 
-        printerService.printUpdatedBoardMessage(board);
+        boardService.checkIfPlayerWonTheGame(board);
 
+        if(!board.isGameOver()){
+            printerService.printUpdatedBoardMessage(board);
+        }
     }
 }
