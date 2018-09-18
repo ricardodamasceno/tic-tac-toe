@@ -4,6 +4,8 @@ import com.tictac.exception.CoordinatesOutOfBoundsException;
 import com.tictac.exception.InvalidCoordinateValueException;
 import com.tictac.model.Board;
 
+import java.util.List;
+
 public class StringUtils {
 
     public static boolean isEmpty(String value){
@@ -39,6 +41,21 @@ public class StringUtils {
             }
         }
         return null;
+    }
+
+    public static boolean checkSameValues(List<String> values){
+
+        String valueCheck = "";
+
+        for(String value : values){
+            if(isEmpty(valueCheck)){
+                valueCheck = value.trim();
+            }else if(!valueCheck.equals(value.trim())){
+                return false;
+            }
+        }
+        return true;
+
     }
 
 }

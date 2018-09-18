@@ -76,4 +76,21 @@ public class PlayerServiceImpl implements PlayerService {
             printerService.printUpdatedBoardMessage(board);
         }
     }
+
+    public void playComputer(Board board){
+        printerService.printComputersTurn();
+        blockPLayer(board);
+        printerService.printTicTacBoard(board);
+    }
+
+    private boolean blockPLayer(Board board){
+
+        boolean blockLine = false, blockColumn = false, blockDiagonal = false;
+        blockLine = boardService.iterateLineOrColumn(board, ConstsEnum.BOARD_LINE.getValue(), ConstsEnum.BLOCK_LINE_OR_COLUMN);
+        if(!blockLine){
+            blockColumn = boardService.iterateLineOrColumn(board, ConstsEnum.BOARD_COLUMN.getValue(), ConstsEnum.BLOCK_LINE_OR_COLUMN);
+        }
+        return blockLine || blockColumn || blockDiagonal;
+    }
+
 }

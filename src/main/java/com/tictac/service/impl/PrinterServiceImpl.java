@@ -55,6 +55,10 @@ public class PrinterServiceImpl implements PrinterService {
         System.out.println("Type the coordinates of the position you want to set on the board");
     }
 
+    public void printComputersTurn(){
+        System.out.println("\n\n".concat(ConstsEnum.COMPUTER.getName()).concat("'s turn."));
+    }
+
     public void printCoordinatesOutOfBoundsException(){
         System.out.println("\n\nThe coordinates you entered exceed the board size.");
         System.out.println("Type a valid position");

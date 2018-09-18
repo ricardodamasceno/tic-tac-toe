@@ -9,6 +9,7 @@ import com.tictac.utils.FileUtils;
 import com.tictac.utils.StringUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BoardServiceImpl implements BoardService {
@@ -69,102 +70,141 @@ public class BoardServiceImpl implements BoardService {
     }
 
     public void checkIfPlayerWonTheGame(Board board){
-        checkIfPlayerWonbyLineOrColumn(board, ConstsEnum.BOARD_LINE.getValue());
-        checkIfPlayerWonbyLineOrColumn(board, ConstsEnum.BOARD_COLUMN.getValue());
-        checkIfPlayerWonbyDiagonal(board);
+        iterateLineOrColumn(board, ConstsEnum.BOARD_LINE.getValue(),   ConstsEnum.VALIDATE_LINE_OR_COLUMN);
+        if(!board.isGameOver()){
+            iterateLineOrColumn(board, ConstsEnum.BOARD_COLUMN.getValue(), ConstsEnum.VALIDATE_LINE_OR_COLUMN);
+            if(!board.isGameOver()){
+                checkIfPlayerWonbyDiagonal(board);
+            }
+        }
         if(board.isGameOver()){
             printerService.printPlayerWonTheGame(board);
         }
     }
 
     private void checkIfPlayerWonbyDiagonal (Board board){
+        int boardSize = board.getBoardSize() - 1;
+
         if(board.getBoard()[0][0] != null){
-            checkDiagonalTop(board);
+            iterateDiagonalTop(board, ConstsEnum.VALIDATE_DIAGONAL);
         }
-        if(!board.isGameOver() && board.getBoard()[board.getBoardSize() - 1][0] != null){
-            checkDiagonalBottom(board);
+        if(!board.isGameOver() && board.getBoard()[boardSize][0] != null){
+            iterateDiagonalBottom(board, ConstsEnum.VALIDATE_DIAGONAL);
         }
     }
 
-    private void checkDiagonalBottom(Board board){
+    private void iterateDiagonalBottom(Board board, ConstsEnum operationType){
 
-        int result = 1;
-        int column = board.getBoardSize() - 1;
+        List<String> lineValues = new ArrayList<>();
+        int boardSize = board.getBoardSize() - 1;
         int line = 0;
 
-        String playerSymbol = board.getBoard()[column][line];
-        column--;
-        line++;
+        for(int count = boardSize; count >= 0; count--){
+            if(operationType.equals(ConstsEnum.VALIDATE_DIAGONAL)){
+                checkLineOrColumn(board, lineValues, line, count, ConstsEnum.BOARD_COLUMN.getValue());
+            }else if(operationType.equals(ConstsEnum.BLOCK_DIAGONAL)){
 
-        for(int count = (board.getBoardSize() - 2); count >= 0; count--){
-            if(playerSymbol.equals(board.getBoard()[count][line])){
-                result++;
-                line++;
-            }else{
-                break;
             }
-        }
-
-        if(result == board.getBoardSize()){
-            board.setGameOver(true);
-            board.setWinner(playerSymbol);
+            line++;
         }
     }
 
-    private void checkDiagonalTop(Board board){
+    private void iterateDiagonalTop(Board board, ConstsEnum operationType){
 
-        int result = 0;
+        List<String> lineValues = new ArrayList<>();
+        int boardSize = board.getBoardSize() -1;
 
-        String playerSymbol = board.getBoard()[0][0];
-        result++;
-        for(int count = 1; count < board.getBoardSize(); count++){
-            if(playerSymbol.equals(board.getBoard()[count][count])){
-                result++;
-            }else{
-                break;
+        for(int count = 0; count <= boardSize ; count++){
+            if(operationType.equals(ConstsEnum.VALIDATE_DIAGONAL)){
+                checkLineOrColumn(board, lineValues, count, count, ConstsEnum.BOARD_LINE.getValue());
+            }else if(operationType.equals(ConstsEnum.BLOCK_DIAGONAL)){
+
             }
         }
-
-        if(result == board.getBoardSize()){
-            board.setGameOver(true);
-            board.setWinner(playerSymbol);
-        }
-
     }
 
-    private void checkIfPlayerWonbyLineOrColumn(Board board, String typeCheck){
+    public Boolean iterateLineOrColumn(Board board, String typeCheck, ConstsEnum operationType){
 
-        String playerSymbol = "";
-        int count = 0;
+        List<String> lineValues;
+        int boardSize = board.getBoardSize() -1;
+        boolean exitMethod = false;
 
         if(board.getBoard() != null){
-            for(int line = 0; line < board.getBoardSize(); line++) {
-                for (int column = 0; column < board.getBoardSize(); column++) {
-                    if(getValueFromPositionByType(board, line, column, typeCheck) != null){
-                        if(StringUtils.isEmpty(playerSymbol)){
-                            playerSymbol = getValueFromPositionByType(board, line, column, typeCheck);
-                            count++;
-                        }else{
-                            if(playerSymbol.equals(getValueFromPositionByType(board, line, column, typeCheck))){
-                                count++;
-                            }else{
-                                break;
-                            }
+            for(int line = 0; line <= boardSize; line++) {
+                if(exitMethod){
+                    break;
+                }
+                lineValues = new ArrayList<>();
+                for (int column = 0; column <= boardSize; column++) {
+                    if(operationType.equals(ConstsEnum.VALIDATE_LINE_OR_COLUMN)){
+                        checkLineOrColumn(board, lineValues, line, column, typeCheck);
+                    }else if(operationType.equals(ConstsEnum.BLOCK_LINE_OR_COLUMN)){
+                        exitMethod = blockLine(board, lineValues, line, column, typeCheck);
+                        if(exitMethod){
+                            break;
                         }
-                    } else{
-                        break;
                     }
                 }
-                if(count == board.getBoardSize()){
+            }
+        }
+        return exitMethod;
+    }
+
+    private void checkLineOrColumn(Board board, List<String> lineValues, Integer line, Integer column, String typeCheck){
+        if(getValueFromPositionByType(board, line, column, typeCheck) != null){
+            lineValues.add(getValueFromPositionByType(board, line, column, typeCheck));
+        }
+        if(validateLastIterationColumn(board, typeCheck, line, column)){
+            if(lineValues.size() == board.getBoardSize()){
+                if(StringUtils.checkSameValues(lineValues)){
                     board.setGameOver(true);
-                    board.setWinner(playerSymbol);
+                    board.setWinner(lineValues.get(0));
                 }
             }
         }
     }
 
     private String getValueFromPositionByType(Board board, int line, int column, String typeCheck){
-        return typeCheck.equals("line") ? board.getBoard()[line][column] : board.getBoard()[column][line];
+        return typeCheck.equals(ConstsEnum.BOARD_LINE.getValue()) ? board.getBoard()[line][column] : board.getBoard()[column][line];
+    }
+
+    public boolean blockLine(Board board, List<String> lineValues, Integer line, Integer column, String typeCheck) {
+
+        boolean result = false;
+        int[] voidPosition = new int[board.getBoardSize()];
+        String positionValue = getValueFromPositionByType(board, line, column, typeCheck);
+
+        if (!StringUtils.isEmpty(positionValue)) {
+            lineValues.add(positionValue);
+        } else {
+            voidPosition[0] = line;
+            voidPosition[1] = column;
+        }
+        if(validateLastIterationColumn(board, typeCheck, line, column)) {
+            if (lineValues.size() == (board.getBoardSize() - 1)) {
+                if (StringUtils.checkSameValues(lineValues)) {
+                    board.getBoard()[voidPosition[0]][voidPosition[1]] = board.getSymbolComputer();
+                    result = true;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private boolean validateLastIterationColumn(Board board, String typeCheck, Integer line, Integer column){
+        boolean result = false;
+        int boardSize = board.getBoardSize() -1;
+        if(typeCheck.equals(ConstsEnum.BOARD_LINE.getValue())){
+            if(column == boardSize){
+                result = true;
+            }
+        }else if(typeCheck.equals(ConstsEnum.BOARD_COLUMN.getValue())){
+            if(line == boardSize){
+                result = true;
+            }
+        }
+        return result;
     }
 
 }

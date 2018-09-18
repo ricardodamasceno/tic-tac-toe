@@ -19,13 +19,16 @@ public class TicTacServiceImpl implements TicTacService {
 
     public void playGame() throws IOException {
         board = boardService.fillBoardEntity();
-        //fillBoard(board);
+        fillBoard(board);
         printerService.printWelcomeMessage(board);
         if (playerService.startGame()) {
             do {
                 playerService.playHuman(board, ConstsEnum.FIRST_PLAYER);
                 if(!board.isGameOver()){
                     playerService.playHuman(board, ConstsEnum.SECOND_PLAYER);
+                }
+                if(!board.isGameOver()){
+                    playerService.playComputer(board);
                 }
             }while (!board.isGameOver());
         } else {
@@ -35,15 +38,15 @@ public class TicTacServiceImpl implements TicTacService {
 
     /*Temporary function*/
     private void fillBoard(Board board){
-        board.getBoard()[0][0] = "b";
+        board.getBoard()[0][0] = "a";
         //board.getBoard()[0][1] = "a";
         //board.getBoard()[0][2] = "a";
         //board.getBoard()[1][0] = "b";
-        board.getBoard()[1][1] = "b";
+        board.getBoard()[1][1] = "a";
         //board.getBoard()[1][2] = "a";
-        //board.getBoard()[2][0] = "a";
+        //board.getBoard()[2][0] = "b";
         //board.getBoard()[2][1] = "c";
-        board.getBoard()[2][2] = "b";
+        //board.getBoard()[2][2] = "b";
     }
 
 }

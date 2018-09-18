@@ -7,5 +7,6 @@ public interface PlayerService {
 
     boolean startGame();
     void playHuman(Board board, ConstsEnum player);
+    void playComputer(Board board);
 
 }
