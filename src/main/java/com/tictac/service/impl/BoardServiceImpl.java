@@ -110,7 +110,7 @@ public class BoardServiceImpl implements BoardService {
         int line = 0;
 
         for(int count = boardSize; count >= 0; count--){
-            iterateDiagonalInnerMethod(board, operationType, lineValues, voidPosition, line, count, exitMethod);
+            iterateDiagonalInnerMethod(board, operationType, lineValues, voidPosition, count, line, exitMethod);
             if(exitMethod){
                 break;
             }
@@ -137,7 +137,7 @@ public class BoardServiceImpl implements BoardService {
 
     public Boolean iterateLineOrColumn(Board board, String typeCheck, ConstsEnum operationType){
 
-        List<String> lineValues = new ArrayList<>();;
+        List<String> lineValues;
         int boardSize = board.getBoardSize() -1;
         boolean exitMethod = false;
         int[] voidPosition = new int[2];
@@ -147,9 +147,13 @@ public class BoardServiceImpl implements BoardService {
                 if(exitMethod){
                     break;
                 }
+                lineValues = new ArrayList<>();
                 for (int column = 0; column <= boardSize; column++) {
                     if(operationType.equals(ConstsEnum.VALIDATE_LINE_OR_COLUMN)){
                         checkLineOrColumn(board, lineValues, line, column, typeCheck);
+                        if(board.isGameOver()){
+                            exitMethod = true;
+                        }
                     }else if(operationType.equals(ConstsEnum.BLOCK_LINE_OR_COLUMN)){
                         exitMethod = blockLine(board, lineValues, voidPosition, line, column, typeCheck);
                         if(exitMethod){
@@ -206,15 +210,11 @@ public class BoardServiceImpl implements BoardService {
     private boolean validateLastIterationColumn(Board board, String typeCheck, Integer line, Integer column){
         boolean result = false;
         int boardSize = board.getBoardSize() -1;
-        if(typeCheck.equals(ConstsEnum.BOARD_LINE.getValue())){
-            if(column == boardSize){
-                result = true;
-            }
-        }else if(typeCheck.equals(ConstsEnum.BOARD_COLUMN.getValue())){
-            if(line == boardSize){
-                result = true;
-            }
+
+        if(column == boardSize){
+            result = true;
         }
+
         return result;
     }
 
