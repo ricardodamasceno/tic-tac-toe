@@ -85,12 +85,24 @@ public class PlayerServiceImpl implements PlayerService {
 
     private boolean blockPLayer(Board board){
 
-        boolean blockLine = false, blockColumn = false, blockDiagonal = false;
-        blockLine = boardService.iterateLineOrColumn(board, ConstsEnum.BOARD_LINE.getValue(), ConstsEnum.BLOCK_LINE_OR_COLUMN);
+        boolean blockLine = false, blockDiagonal = false;
+
+        blockLine = blockLine(board);
         if(!blockLine){
-            blockColumn = boardService.iterateLineOrColumn(board, ConstsEnum.BOARD_COLUMN.getValue(), ConstsEnum.BLOCK_LINE_OR_COLUMN);
+            blockDiagonal = blockDiagonal(board);
         }
-        return blockLine || blockColumn || blockDiagonal;
+        return blockLine || blockDiagonal;
     }
+
+    private boolean blockLine(Board board){
+        return boardService.iterateLineOrColumn(board, ConstsEnum.BOARD_LINE.getValue(), ConstsEnum.BLOCK_LINE_OR_COLUMN)
+                || boardService.iterateLineOrColumn(board, ConstsEnum.BOARD_COLUMN.getValue(), ConstsEnum.BLOCK_LINE_OR_COLUMN);
+    }
+
+    private boolean blockDiagonal (Board board){
+        return boardService.iterateDiagonalBottom(board, ConstsEnum.BLOCK_DIAGONAL)
+                || boardService.iterateDiagonalTop(board, ConstsEnum.BLOCK_DIAGONAL);
+    }
+
 
 }

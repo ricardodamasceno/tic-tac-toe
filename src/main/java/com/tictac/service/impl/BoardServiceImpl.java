@@ -93,34 +93,46 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
-    private void iterateDiagonalBottom(Board board, ConstsEnum operationType){
-
-        List<String> lineValues = new ArrayList<>();
-        int boardSize = board.getBoardSize() - 1;
-        int line = 0;
-
-        for(int count = boardSize; count >= 0; count--){
-            if(operationType.equals(ConstsEnum.VALIDATE_DIAGONAL)){
-                checkLineOrColumn(board, lineValues, line, count, ConstsEnum.BOARD_COLUMN.getValue());
-            }else if(operationType.equals(ConstsEnum.BLOCK_DIAGONAL)){
-
-            }
-            line++;
+    private void iterateDiagonalInnerMethod(Board board, ConstsEnum operationType, List<String> lineValues, int[] voidPosotion, int line, int column, boolean exitMethod ){
+        if(operationType.equals(ConstsEnum.VALIDATE_DIAGONAL)){
+            checkLineOrColumn(board, lineValues, line, column, ConstsEnum.BOARD_COLUMN.getValue());
+        }else if(operationType.equals(ConstsEnum.BLOCK_DIAGONAL)){
+            exitMethod = blockLine(board, lineValues, voidPosotion, column, line, ConstsEnum.BOARD_LINE.getValue());
         }
     }
 
-    private void iterateDiagonalTop(Board board, ConstsEnum operationType){
+    public boolean iterateDiagonalBottom(Board board, ConstsEnum operationType){
+
+        List<String> lineValues = new ArrayList<>();
+        boolean exitMethod = false;
+        int boardSize = board.getBoardSize() - 1;
+        int[] voidPosition = new int[2];
+        int line = 0;
+
+        for(int count = boardSize; count >= 0; count--){
+            iterateDiagonalInnerMethod(board, operationType, lineValues, voidPosition, line, count, exitMethod);
+            if(exitMethod){
+                break;
+            }
+            line++;
+        }
+        return exitMethod;
+    }
+
+    public boolean iterateDiagonalTop(Board board, ConstsEnum operationType){
 
         List<String> lineValues = new ArrayList<>();
         int boardSize = board.getBoardSize() -1;
+        boolean exitMethod = false;
+        int[] voidPosition = new int[2];
 
         for(int count = 0; count <= boardSize ; count++){
-            if(operationType.equals(ConstsEnum.VALIDATE_DIAGONAL)){
-                checkLineOrColumn(board, lineValues, count, count, ConstsEnum.BOARD_LINE.getValue());
-            }else if(operationType.equals(ConstsEnum.BLOCK_DIAGONAL)){
-
+            iterateDiagonalInnerMethod(board, operationType, lineValues,voidPosition, count, count, exitMethod);
+            if(exitMethod){
+                break;
             }
         }
+        return exitMethod;
     }
 
     public Boolean iterateLineOrColumn(Board board, String typeCheck, ConstsEnum operationType){
@@ -128,6 +140,7 @@ public class BoardServiceImpl implements BoardService {
         List<String> lineValues;
         int boardSize = board.getBoardSize() -1;
         boolean exitMethod = false;
+        int[] voidPosition = new int[2];
 
         if(board.getBoard() != null){
             for(int line = 0; line <= boardSize; line++) {
@@ -139,7 +152,7 @@ public class BoardServiceImpl implements BoardService {
                     if(operationType.equals(ConstsEnum.VALIDATE_LINE_OR_COLUMN)){
                         checkLineOrColumn(board, lineValues, line, column, typeCheck);
                     }else if(operationType.equals(ConstsEnum.BLOCK_LINE_OR_COLUMN)){
-                        exitMethod = blockLine(board, lineValues, line, column, typeCheck);
+                        exitMethod = blockLine(board, lineValues, voidPosition, line, column, typeCheck);
                         if(exitMethod){
                             break;
                         }
@@ -168,10 +181,9 @@ public class BoardServiceImpl implements BoardService {
         return typeCheck.equals(ConstsEnum.BOARD_LINE.getValue()) ? board.getBoard()[line][column] : board.getBoard()[column][line];
     }
 
-    public boolean blockLine(Board board, List<String> lineValues, Integer line, Integer column, String typeCheck) {
+    public boolean blockLine(Board board, List<String> lineValues, int[] voidPosition, Integer line, Integer column, String typeCheck) {
 
         boolean result = false;
-        int[] voidPosition = new int[board.getBoardSize()];
         String positionValue = getValueFromPositionByType(board, line, column, typeCheck);
 
         if (!StringUtils.isEmpty(positionValue)) {
