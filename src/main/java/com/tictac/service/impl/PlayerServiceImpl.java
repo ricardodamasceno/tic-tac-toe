@@ -9,6 +9,7 @@ import com.tictac.service.PrinterService;
 import com.tictac.utils.ConstsEnum;
 import com.tictac.utils.StringUtils;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public class PlayerServiceImpl implements PlayerService {
@@ -78,10 +79,76 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     public void playComputer(Board board){
+
+        boolean exitPlay = false;
         printerService.printComputersTurn();
-        blockPLayer(board);
+        if(!board.isRandomPlay()){
+            playRandomValue(board);
+        }else{
+            exitPlay = blockPLayer(board);
+            if(!exitPlay){
+                exitPlay = playOppositeCorner(board, board.getBoardSize() - 1);
+                if(exitPlay){
+
+                }
+            }
+        }
+
         printerService.printTicTacBoard(board);
     }
+
+    private void playRandomValue(Board board){
+
+        int boardSize = board.getBoardSize() - 1;
+        Random random = new Random();
+
+        do {
+
+            int line = random.nextInt(boardSize);
+            random = new Random();
+            int column = random.nextInt(boardSize);
+
+            if(boardService.validateIfBoardPositionIsEmpty(board, new int[]{line, column})){
+                board.getBoard()[line][column] = board.getSymbolComputer();
+                board.setRandomPlay(true);
+            }
+
+        }while (!board.isRandomPlay());
+
+    }
+
+    private boolean playOppositeCorner(Board board, int boardSize){
+        if(!boardService.validateIfBoardPositionIsEmpty(board, new int[]{0, 0}) && !board.getBoard()[0][0].equals(board.getSymbolComputer())){
+            if(boardService.validateIfBoardPositionIsEmpty(board, new int[]{boardSize, boardSize})){
+                board.getBoard()[boardSize][boardSize] = board.getSymbolComputer();
+                return true;
+            }
+        }
+
+        if(!boardService.validateIfBoardPositionIsEmpty(board, new int[]{boardSize, boardSize}) && !board.getBoard()[boardSize][boardSize].equals(board.getSymbolComputer())){
+            if(boardService.validateIfBoardPositionIsEmpty(board, new int[]{0, 0})){
+                board.getBoard()[0][0] = board.getSymbolComputer();
+                return true;
+            }
+        }
+
+        if(!boardService.validateIfBoardPositionIsEmpty(board, new int[]{0, boardSize}) && !board.getBoard()[0][boardSize].equals(board.getSymbolComputer())){
+            if(boardService.validateIfBoardPositionIsEmpty(board, new int[]{boardSize, 0})){
+                board.getBoard()[boardSize][0] = board.getSymbolComputer();
+                return true;
+            }
+        }
+
+        if(!boardService.validateIfBoardPositionIsEmpty(board, new int[]{boardSize, 0}) && !board.getBoard()[boardSize][0].equals(board.getSymbolComputer())){
+            if(boardService.validateIfBoardPositionIsEmpty(board, new int[]{0, boardSize})){
+                board.getBoard()[0][boardSize] = board.getSymbolComputer();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     private boolean blockPLayer(Board board){
 

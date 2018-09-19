@@ -5,6 +5,7 @@ public class Board {
     private String [][] board;
     private Integer boardSize;
     private boolean gameOver = false;
+    private boolean randomPlay = false;
 
     private String winner = "";
     private String symbolPlayer1 = "";
@@ -65,5 +66,13 @@ public class Board {
 
     public void setWinner(String winner) {
         this.winner = winner;
+    }
+
+    public boolean isRandomPlay() {
+        return randomPlay;
+    }
+
+    public void setRandomPlay(boolean randomPlay) {
+        this.randomPlay = randomPlay;
     }
 }
