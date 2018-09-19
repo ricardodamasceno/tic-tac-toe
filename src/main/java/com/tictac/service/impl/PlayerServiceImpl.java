@@ -79,7 +79,6 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     public void playComputer(Board board){
-
         boolean exitPlay = false;
         printerService.printComputersTurn();
         if(!board.isRandomPlay()){
@@ -88,13 +87,26 @@ public class PlayerServiceImpl implements PlayerService {
             exitPlay = blockPLayer(board);
             if(!exitPlay){
                 exitPlay = playOppositeCorner(board, board.getBoardSize() - 1);
-                if(exitPlay){
-
-                }
             }
+            if(!exitPlay){
+                computerNextMove(board);
+            }
+            boardService.checkIfPlayerWonTheGame(board);
         }
-
         printerService.printTicTacBoard(board);
+    }
+
+    private void computerNextMove(Board board){
+
+        boolean exitPlay = false;
+        exitPlay = boardService.iterateLineOrColumn(board, ConstsEnum.BOARD_LINE.getValue(), ConstsEnum.COMPUTER_NEXT_MOVE);
+
+        if(!exitPlay){
+            exitPlay = boardService.iterateLineOrColumn(board, ConstsEnum.BOARD_COLUMN.getValue(), ConstsEnum.COMPUTER_NEXT_MOVE);
+        }
+        if(!exitPlay){
+            playRandomValue(board);
+        }
     }
 
     private void playRandomValue(Board board){
@@ -103,7 +115,6 @@ public class PlayerServiceImpl implements PlayerService {
         Random random = new Random();
 
         do {
-
             int line = random.nextInt(boardSize);
             random = new Random();
             int column = random.nextInt(boardSize);
@@ -112,7 +123,6 @@ public class PlayerServiceImpl implements PlayerService {
                 board.getBoard()[line][column] = board.getSymbolComputer();
                 board.setRandomPlay(true);
             }
-
         }while (!board.isRandomPlay());
 
     }
@@ -145,10 +155,8 @@ public class PlayerServiceImpl implements PlayerService {
                 return true;
             }
         }
-
         return false;
     }
-
 
     private boolean blockPLayer(Board board){
 

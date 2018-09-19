@@ -15,6 +15,6 @@ public interface BoardService {
     boolean validateIfBoardPositionIsEmpty(Board board, int[] position);
     void registerPlayPosition(Board board, int [] position, ConstsEnum player);
     void checkIfPlayerWonTheGame(Board board);
-    boolean blockLine(Board board, List<String> lineValues, int[] voidPosition, Integer line, Integer column, String typeCheck);
+    boolean blockLine(Board board, List<String> lineValues, Integer[] voidPosition, Integer line, Integer column, String typeCheck);
 
 }

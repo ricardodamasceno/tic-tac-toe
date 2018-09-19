@@ -93,7 +93,7 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
-    private void iterateDiagonalInnerMethod(Board board, ConstsEnum operationType, List<String> lineValues, int[] voidPosotion, int line, int column, boolean exitMethod ){
+    private void iterateDiagonalInnerMethod(Board board, ConstsEnum operationType, List<String> lineValues, Integer[] voidPosotion, int line, int column, boolean exitMethod ){
         if(operationType.equals(ConstsEnum.VALIDATE_DIAGONAL)){
             checkLineOrColumn(board, lineValues, line, column, ConstsEnum.BOARD_COLUMN.getValue());
         }else if(operationType.equals(ConstsEnum.BLOCK_DIAGONAL)){
@@ -106,7 +106,7 @@ public class BoardServiceImpl implements BoardService {
         List<String> lineValues = new ArrayList<>();
         boolean exitMethod = false;
         int boardSize = board.getBoardSize() - 1;
-        int[] voidPosition = new int[2];
+        Integer[] voidPosition = new Integer[2];
         int line = 0;
 
         for(int count = boardSize; count >= 0; count--){
@@ -124,7 +124,7 @@ public class BoardServiceImpl implements BoardService {
         List<String> lineValues = new ArrayList<>();
         int boardSize = board.getBoardSize() -1;
         boolean exitMethod = false;
-        int[] voidPosition = new int[2];
+        Integer[] voidPosition = new Integer[2];
 
         for(int count = 0; count <= boardSize ; count++){
             iterateDiagonalInnerMethod(board, operationType, lineValues,voidPosition, count, count, exitMethod);
@@ -140,7 +140,7 @@ public class BoardServiceImpl implements BoardService {
         List<String> lineValues;
         int boardSize = board.getBoardSize() -1;
         boolean exitMethod = false;
-        int[] voidPosition = new int[2];
+        Integer[] voidPosition = new Integer[2];
 
         if(board.getBoard() != null){
             for(int line = 0; line <= boardSize; line++) {
@@ -159,12 +159,40 @@ public class BoardServiceImpl implements BoardService {
                         if(exitMethod){
                             break;
                         }
+                    }else if(operationType.equals(ConstsEnum.COMPUTER_NEXT_MOVE)){
+                        markLineOrColumn(board, lineValues, voidPosition, line, column, typeCheck);
+                        if(column == boardSize){
+                            if (validateMarkComputerNextPosition(board, lineValues)) {
+                                board.getBoard()[voidPosition[0]][voidPosition[1]] = board.getSymbolComputer();
+                                exitMethod = true;
+                            }
+                        }
                     }
                 }
             }
         }
         return exitMethod;
     }
+
+    private boolean validateMarkComputerNextPosition(Board board, List<String> lineValues){
+        return !lineValues.isEmpty()
+                && lineValues.size() < board.getBoardSize()
+                && StringUtils.checkSameValues(lineValues)
+                && lineValues.contains(board.getSymbolComputer());
+    }
+
+    public void markLineOrColumn(Board board, List<String> lineValues, Integer[] voidPosition, Integer line, Integer column, String typeCheck) {
+
+        String positionValue = getValueFromPositionByType(board, line, column, typeCheck);
+
+        if (!StringUtils.isEmpty(positionValue)) {
+            lineValues.add(positionValue);
+        }else {
+            voidPosition[0] = line;
+            voidPosition[1] = column;
+        }
+    }
+
 
     private void checkLineOrColumn(Board board, List<String> lineValues, Integer line, Integer column, String typeCheck){
         if(getValueFromPositionByType(board, line, column, typeCheck) != null){
@@ -180,11 +208,11 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
-    private String getValueFromPositionByType(Board board, int line, int column, String typeCheck){
+    private String getValueFromPositionByType(Board board, Integer line, int column, String typeCheck){
         return typeCheck.equals(ConstsEnum.BOARD_LINE.getValue()) ? board.getBoard()[line][column] : board.getBoard()[column][line];
     }
 
-    public boolean blockLine(Board board, List<String> lineValues, int[] voidPosition, Integer line, Integer column, String typeCheck) {
+    public boolean blockLine(Board board, List<String> lineValues, Integer[] voidPosition, Integer line, Integer column, String typeCheck) {
 
         boolean result = false;
         String positionValue = getValueFromPositionByType(board, line, column, typeCheck);
