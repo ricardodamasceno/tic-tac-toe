@@ -38,8 +38,8 @@ public class TicTacServiceImpl implements TicTacService {
 
     /*Temporary function*/
     private void fillBoard(Board board){
-        board.getBoard()[0][0] = "a";
-        board.getBoard()[1][1] = "a";
+        board.getBoard()[1][0] = "a";
+        board.getBoard()[2][2] = "c";
         //board.getBoard()[2][3] = "a";
         /*board.getBoard()[3][3] = "a";
         board.getBoard()[4][3] = "a";

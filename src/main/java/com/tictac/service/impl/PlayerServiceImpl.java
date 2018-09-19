@@ -93,14 +93,19 @@ public class PlayerServiceImpl implements PlayerService {
             }
             boardService.checkIfPlayerWonTheGame(board);
         }
-        printerService.printTicTacBoard(board);
     }
 
     private void computerNextMove(Board board){
 
         boolean exitPlay = false;
-        exitPlay = boardService.iterateLineOrColumn(board, ConstsEnum.BOARD_LINE.getValue(), ConstsEnum.COMPUTER_NEXT_MOVE);
+        exitPlay = boardService.iterateDiagonalBottom(board, ConstsEnum.COMPUTER_NEXT_MOVE);
 
+        if(!exitPlay){
+            exitPlay = boardService.iterateDiagonalTop(board, ConstsEnum.COMPUTER_NEXT_MOVE);
+        }
+        if (!exitPlay){
+            exitPlay = boardService.iterateLineOrColumn(board, ConstsEnum.BOARD_LINE.getValue(), ConstsEnum.COMPUTER_NEXT_MOVE);
+        }
         if(!exitPlay){
             exitPlay = boardService.iterateLineOrColumn(board, ConstsEnum.BOARD_COLUMN.getValue(), ConstsEnum.COMPUTER_NEXT_MOVE);
         }

@@ -98,6 +98,8 @@ public class BoardServiceImpl implements BoardService {
             checkLineOrColumn(board, lineValues, line, column, ConstsEnum.BOARD_COLUMN.getValue());
         }else if(operationType.equals(ConstsEnum.BLOCK_DIAGONAL)){
             exitMethod = blockLine(board, lineValues, voidPosotion, column, line, ConstsEnum.BOARD_LINE.getValue());
+        }else if(operationType.equals(ConstsEnum.COMPUTER_NEXT_MOVE)){
+            markLineOrColumn(board, lineValues, voidPosotion, line, column, ConstsEnum.BOARD_LINE.getValue());
         }
     }
 
@@ -111,6 +113,9 @@ public class BoardServiceImpl implements BoardService {
 
         for(int count = boardSize; count >= 0; count--){
             iterateDiagonalInnerMethod(board, operationType, lineValues, voidPosition, count, line, exitMethod);
+            if(operationType.equals(ConstsEnum.COMPUTER_NEXT_MOVE) && count == 0 && line == boardSize){
+                exitMethod = markDiagonal(board, lineValues, voidPosition);
+            }
             if(exitMethod){
                 break;
             }
@@ -128,11 +133,22 @@ public class BoardServiceImpl implements BoardService {
 
         for(int count = 0; count <= boardSize ; count++){
             iterateDiagonalInnerMethod(board, operationType, lineValues,voidPosition, count, count, exitMethod);
+            if(operationType.equals(ConstsEnum.COMPUTER_NEXT_MOVE) && count == boardSize){
+                exitMethod = markDiagonal(board, lineValues, voidPosition);
+            }
             if(exitMethod){
                 break;
             }
         }
         return exitMethod;
+    }
+
+    private boolean markDiagonal(Board board, List<String> lineValues, Integer[] voidPosition){
+        if(validateMarkComputerNextPosition(board, lineValues)){
+            markPosition(board, board.getSymbolComputer(), voidPosition);
+            return true;
+        }
+        return false;
     }
 
     public Boolean iterateLineOrColumn(Board board, String typeCheck, ConstsEnum operationType){
@@ -244,6 +260,10 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return result;
+    }
+
+    private void markPosition(Board board, String player, Integer[] position){
+        board.getBoard()[position[0]][position[1]] = player;
     }
 
 }
