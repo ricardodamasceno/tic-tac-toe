@@ -40,9 +40,9 @@ public class TicTacServiceImpl implements TicTacService {
     private void fillBoard(Board board){
         //board.getBoard()[0][0] = "a";
         //board.getBoard()[0][1] = "a";
-        board.getBoard()[0][2] = "a";
-        //board.getBoard()[1][0] = "b";
-        //board.getBoard()[1][1] = "a";
+        //board.getBoard()[0][2] = "a";
+        board.getBoard()[1][0] = "a";
+        board.getBoard()[1][1] = "a";
         //board.getBoard()[1][2] = "a";
         //board.getBoard()[2][0] = "b";
         //board.getBoard()[2][1] = "c";
