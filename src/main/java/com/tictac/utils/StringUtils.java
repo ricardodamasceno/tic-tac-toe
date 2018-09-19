@@ -16,7 +16,8 @@ public class StringUtils {
     public static String getValueFromFileLine(String value){
         if(!StringUtils.isEmpty(value)){
             String [] spplitedValue = value.split(":");
-            return spplitedValue[1].trim();
+            return spplitedValue.length > 1 &&
+                    !StringUtils.isEmpty(spplitedValue[1]) ? spplitedValue[1].trim() : null;
         }
         return null;
     }

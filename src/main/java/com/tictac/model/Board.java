@@ -6,6 +6,7 @@ public class Board {
     private Integer boardSize;
     private boolean gameOver = false;
     private boolean randomPlay = false;
+    private boolean invalidBoard = false;
 
     private String winner = "";
     private String symbolPlayer1 = "";
@@ -74,5 +75,13 @@ public class Board {
 
     public void setRandomPlay(boolean randomPlay) {
         this.randomPlay = randomPlay;
+    }
+
+    public boolean isInvalidBoard() {
+        return invalidBoard;
+    }
+
+    public void setInvalidBoard(boolean invalidBoard) {
+        this.invalidBoard = invalidBoard;
     }
 }

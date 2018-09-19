@@ -25,7 +25,7 @@ public class PlayerServiceImpl implements PlayerService {
         String typedValue;
 
         do {
-            System.out.println("\nDo you wish to continue ? (y/n)");
+            printerService.printContinue();
             reader = new Scanner(System.in);
             try {
                 typedValue = reader.next();
@@ -37,10 +37,10 @@ public class PlayerServiceImpl implements PlayerService {
                     result = false;
                     validValue = true;
                 } else {
-                    System.out.println("\nInvalid value !!!");
+                    printerService.printInvalidValue();
                 }
             } catch (Exception e) {
-                System.out.println("\nInvalid value !!!");
+                printerService.printInvalidValue();
             }
         } while (!validValue);
         return result;
@@ -135,28 +135,25 @@ public class PlayerServiceImpl implements PlayerService {
     private boolean playOppositeCorner(Board board, int boardSize){
         if(!boardService.validateIfBoardPositionIsEmpty(board, new int[]{0, 0}) && !board.getBoard()[0][0].equals(board.getSymbolComputer())){
             if(boardService.validateIfBoardPositionIsEmpty(board, new int[]{boardSize, boardSize})){
-                board.getBoard()[boardSize][boardSize] = board.getSymbolComputer();
+                boardService.markPosition(board, board.getSymbolComputer(), new Integer[]{boardSize, boardSize});
                 return true;
             }
         }
-
         if(!boardService.validateIfBoardPositionIsEmpty(board, new int[]{boardSize, boardSize}) && !board.getBoard()[boardSize][boardSize].equals(board.getSymbolComputer())){
             if(boardService.validateIfBoardPositionIsEmpty(board, new int[]{0, 0})){
-                board.getBoard()[0][0] = board.getSymbolComputer();
+                boardService.markPosition(board, board.getSymbolComputer(), new Integer[]{0, 0});
                 return true;
             }
         }
-
         if(!boardService.validateIfBoardPositionIsEmpty(board, new int[]{0, boardSize}) && !board.getBoard()[0][boardSize].equals(board.getSymbolComputer())){
             if(boardService.validateIfBoardPositionIsEmpty(board, new int[]{boardSize, 0})){
-                board.getBoard()[boardSize][0] = board.getSymbolComputer();
+                boardService.markPosition(board, board.getSymbolComputer(), new Integer[]{boardSize, 0});
                 return true;
             }
         }
-
         if(!boardService.validateIfBoardPositionIsEmpty(board, new int[]{boardSize, 0}) && !board.getBoard()[boardSize][0].equals(board.getSymbolComputer())){
             if(boardService.validateIfBoardPositionIsEmpty(board, new int[]{0, boardSize})){
-                board.getBoard()[0][boardSize] = board.getSymbolComputer();
+                boardService.markPosition(board, board.getSymbolComputer(), new Integer[]{0, boardSize});
                 return true;
             }
         }
@@ -165,13 +162,14 @@ public class PlayerServiceImpl implements PlayerService {
 
     private boolean blockPLayer(Board board){
 
-        boolean blockLine = false, blockDiagonal = false;
+        boolean exitMethod = false;
+        exitMethod = blockLine(board);
 
-        blockLine = blockLine(board);
-        if(!blockLine){
-            blockDiagonal = blockDiagonal(board);
+        if(!exitMethod){
+            exitMethod = blockDiagonal(board);
         }
-        return blockLine || blockDiagonal;
+
+        return exitMethod;
     }
 
     private boolean blockLine(Board board){

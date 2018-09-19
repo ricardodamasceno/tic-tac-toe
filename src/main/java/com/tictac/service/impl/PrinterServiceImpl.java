@@ -64,10 +64,22 @@ public class PrinterServiceImpl implements PrinterService {
         System.out.println("Type a valid position");
     }
 
+    public void printInvalidFileInformation(){
+        System.out.println("\n\nThe information you inserted in the file are invalid");
+    }
+
     public void printPlayerWonTheGame(Board board){
         System.out.println("\n\nGame Over !!!");
         printTicTacBoard(board);
         System.out.println("\nPlayer with the symbol " + board.getWinner().concat(" won the game !\n\n"));
+    }
+
+    public void printContinue(){
+        System.out.println("\nDo you wish to continue ? (y/n)");
+    }
+
+    public void printInvalidValue(){
+        System.out.println("\nInvalid value !!!");
     }
 
 }

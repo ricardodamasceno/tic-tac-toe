@@ -19,20 +19,25 @@ public class TicTacServiceImpl implements TicTacService {
 
     public void playGame() throws IOException {
         board = boardService.fillBoardEntity();
-        fillBoard(board);
-        printerService.printWelcomeMessage(board);
-        if (playerService.startGame()) {
-            do {
-                playerService.playHuman(board, ConstsEnum.FIRST_PLAYER);
-                if(!board.isGameOver()){
-                    playerService.playHuman(board, ConstsEnum.SECOND_PLAYER);
-                }
-                if(!board.isGameOver()){
-                    playerService.playComputer(board);
-                }
-            }while (!board.isGameOver());
-        } else {
-            printerService.printComeBackSoonMessage();
+
+        if(!board.isInvalidBoard()){
+            fillBoard(board);
+            printerService.printWelcomeMessage(board);
+            if (playerService.startGame()) {
+                do {
+                    playerService.playHuman(board, ConstsEnum.FIRST_PLAYER);
+                    if(!board.isGameOver()){
+                        playerService.playHuman(board, ConstsEnum.SECOND_PLAYER);
+                    }
+                    if(!board.isGameOver()){
+                        playerService.playComputer(board);
+                    }
+                }while (!board.isGameOver());
+            } else {
+                printerService.printComeBackSoonMessage();
+            }
+        }else{
+            printerService.printInvalidFileInformation();
         }
     }
 

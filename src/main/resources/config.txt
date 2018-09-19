@@ -1,4 +1,4 @@
-boardSize: 5
+boardSize: 3
 
 firstPlayerSymbol: a
 secondPlayerSymbol: b

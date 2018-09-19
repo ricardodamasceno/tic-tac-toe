@@ -20,11 +20,9 @@ public class BoardServiceImpl implements BoardService {
     public Board fillBoardEntity() throws IOException {
 
         List<String> fileValues = FileUtils.readDataFromFile();
+        Board board = new Board();
 
         if(fileValues != null && !fileValues.isEmpty()){
-
-            Board board = new Board();
-
             fileValues.forEach(value -> {
                 if(value.contains(ConstsEnum.FIRST_PLAYER.getValue())){
                     board.setSymbolPlayer1(StringUtils.getValueFromFileLine(value));
@@ -33,21 +31,34 @@ public class BoardServiceImpl implements BoardService {
                 } else if(value.contains(ConstsEnum.COMPUTER.getValue())){
                     board.setSymbolComputer(StringUtils.getValueFromFileLine(value));
                 } else if(value.contains(ConstsEnum.BOARD_SIZE.getValue())){
-                    //Implementar exceção
-                    Integer boardSize = Integer.parseInt(StringUtils.getValueFromFileLine(value));
+                    String boardString = StringUtils.getValueFromFileLine(value);
+                    Integer boardSize = !StringUtils.isEmpty(boardString) ? Integer.parseInt(boardString) : null ;
                     if(validateBoardSize(boardSize)){
                         board.setBoardSize(boardSize);
                         board.setBoard(new String[boardSize][boardSize]);
+                    }else {
+                        board.setInvalidBoard(true);
                     }
                 }
             });
-            return board;
+            if(!board.isInvalidBoard()){
+                board.setInvalidBoard(!validBoardEntity(board));
+            }
+        }else{
+            board.setInvalidBoard(true);
         }
-        return null;
+        return board;
+    }
+
+    private boolean validBoardEntity (Board board){
+        return board.getBoardSize()!= null
+                && !StringUtils.isEmpty(board.getSymbolPlayer1())
+                && !StringUtils.isEmpty(board.getSymbolPlayer2())
+                && !StringUtils.isEmpty(board.getSymbolComputer());
     }
 
     private boolean validateBoardSize(Integer boardSize){
-        return boardSize >= 3 && boardSize <= 10;
+        return boardSize != null && boardSize >= 3 && boardSize <= 10;
     }
 
     public boolean validateIfBoardPositionIsEmpty(Board board, int[] position){
@@ -262,7 +273,7 @@ public class BoardServiceImpl implements BoardService {
         return result;
     }
 
-    private void markPosition(Board board, String player, Integer[] position){
+    public void markPosition(Board board, String player, Integer[] position){
         board.getBoard()[position[0]][position[1]] = player;
     }
 

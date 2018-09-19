@@ -16,5 +16,6 @@ public interface BoardService {
     void registerPlayPosition(Board board, int [] position, ConstsEnum player);
     void checkIfPlayerWonTheGame(Board board);
     boolean blockLine(Board board, List<String> lineValues, Integer[] voidPosition, Integer line, Integer column, String typeCheck);
+    void markPosition(Board board, String player, Integer[] position);
 
 }

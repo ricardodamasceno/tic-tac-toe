@@ -15,5 +15,8 @@ public interface PrinterService {
     void printCoordinatesOutOfBoundsException();
     void printPlayerWonTheGame(Board board);
     void printComputersTurn();
+    void printContinue();
+    void printInvalidValue();
+    void printInvalidFileInformation();
 
 }
