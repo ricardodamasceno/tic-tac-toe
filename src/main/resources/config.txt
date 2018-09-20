@@ -1,5 +1,5 @@
 boardSize: 5
 
-firstPlayerSymbol: a
-secondPlayerSymbol: b
-computerSymbol: c
+firstPlayerSymbol: A
+secondPlayerSymbol: B
+computerSymbol: C

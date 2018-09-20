@@ -21,7 +21,6 @@ public class TicTacServiceImpl implements TicTacService {
         board = boardService.fillBoardEntity();
 
         if(!board.isInvalidBoard()){
-            //fillBoard(board);
             printerService.printWelcomeMessage(board);
             if (playerService.startGame()) {
                 do {
@@ -40,28 +39,6 @@ public class TicTacServiceImpl implements TicTacService {
             printerService.printInvalidFileInformation();
         }
     }
-
-    /*Temporary function*/
-    private void fillBoard(Board board){
-        board.getBoard()[1][0] = "a";
-        board.getBoard()[2][2] = "c";
-        //board.getBoard()[2][3] = "a";
-        /*board.getBoard()[3][3] = "a";
-        board.getBoard()[4][3] = "a";
-        board.getBoard()[5][3] = "a";
-        board.getBoard()[6][3] = "a";
-        board.getBoard()[7][3] = "a";
-        board.getBoard()[8][3] = "a";*/
-        //board.getBoard()[0][1] = "a";
-        //board.getBoard()[0][2] = "a";
-        //board.getBoard()[1][0] = "a";
-        //board.getBoard()[1][1] = "a";
-        //board.getBoard()[1][2] = "a";
-        //board.getBoard()[2][0] = "b";
-        //board.getBoard()[2][1] = "c";
-        //board.getBoard()[2][2] = "a";
-    }
-
 }
 
 
