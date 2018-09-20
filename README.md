@@ -6,7 +6,7 @@ This game was developed using java, maven and JUnit.
 
 To play it, run the following commands:
 
-npm run install (Install dependencies, run tests and build the project)
+mvn clean install (Install dependencies, run tests and build the project)
 
 You'll also need JDK 8 on your PC to run the application. 
 
