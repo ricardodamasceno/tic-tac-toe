@@ -93,6 +93,9 @@ public class PlayerServiceImpl implements PlayerService {
             }
             boardService.checkIfPlayerWonTheGame(board);
         }
+        if(!board.isGameOver()){
+            printerService.printUpdatedBoardMessage(board);
+        }
     }
 
     private void computerNextMove(Board board){
@@ -125,7 +128,7 @@ public class PlayerServiceImpl implements PlayerService {
             int column = random.nextInt(boardSize);
 
             if(boardService.validateIfBoardPositionIsEmpty(board, new int[]{line, column})){
-                board.getBoard()[line][column] = board.getSymbolComputer();
+                boardService.markPosition(board, board.getSymbolComputer(), new Integer[]{line, column});
                 board.setRandomPlay(true);
             }
         }while (!board.isRandomPlay());

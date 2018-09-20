@@ -21,7 +21,7 @@ public class TicTacServiceImpl implements TicTacService {
         board = boardService.fillBoardEntity();
 
         if(!board.isInvalidBoard()){
-            fillBoard(board);
+            //fillBoard(board);
             printerService.printWelcomeMessage(board);
             if (playerService.startGame()) {
                 do {
