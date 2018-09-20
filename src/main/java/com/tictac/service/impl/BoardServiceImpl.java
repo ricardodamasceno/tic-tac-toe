@@ -1,5 +1,6 @@
 package com.tictac.service.impl;
 
+import com.sun.org.omg.CORBA.ContextIdSeqHelper;
 import com.tictac.exception.InvalidValueException;
 import com.tictac.model.Board;
 import com.tictac.service.BoardService;
@@ -108,7 +109,7 @@ public class BoardServiceImpl implements BoardService {
         if(operationType.equals(ConstsEnum.VALIDATE_DIAGONAL)){
             checkLineOrColumn(board, lineValues, line, column, ConstsEnum.BOARD_COLUMN.getValue());
         }else if(operationType.equals(ConstsEnum.BLOCK_DIAGONAL)){
-            exitMethod = blockLine(board, lineValues, voidPosotion, column, line, ConstsEnum.BOARD_LINE.getValue());
+            exitMethod = blockLine(board, lineValues, voidPosotion, line, column, ConstsEnum.BOARD_LINE.getValue());
         }else if(operationType.equals(ConstsEnum.COMPUTER_NEXT_MOVE)){
             markLineOrColumn(board, lineValues, voidPosotion, line, column, ConstsEnum.BOARD_LINE.getValue());
         }
@@ -143,7 +144,7 @@ public class BoardServiceImpl implements BoardService {
         Integer[] voidPosition = new Integer[2];
 
         for(int count = 0; count <= boardSize ; count++){
-            iterateDiagonalInnerMethod(board, operationType, lineValues,voidPosition, count, count, exitMethod);
+            iterateDiagonalInnerMethod(board, operationType, lineValues, voidPosition, count, count, exitMethod);
             if(operationType.equals(ConstsEnum.COMPUTER_NEXT_MOVE) && count == boardSize){
                 exitMethod = markDiagonal(board, lineValues, voidPosition);
             }
@@ -190,7 +191,11 @@ public class BoardServiceImpl implements BoardService {
                         markLineOrColumn(board, lineValues, voidPosition, line, column, typeCheck);
                         if(column == boardSize){
                             if (validateMarkComputerNextPosition(board, lineValues)) {
-                                board.getBoard()[voidPosition[0]][voidPosition[1]] = board.getSymbolComputer();
+                                if(typeCheck.equals(ConstsEnum.BOARD_LINE.getValue())){
+                                    markPosition(board, board.getSymbolComputer(), new Integer[]{voidPosition[0], voidPosition[1]});
+                                }else if(typeCheck.equals(ConstsEnum.BOARD_COLUMN.getValue())){
+                                    markPosition(board, board.getSymbolComputer(), new Integer[]{voidPosition[1], voidPosition[0]});
+                                }
                                 exitMethod = true;
                             }
                         }
@@ -253,7 +258,11 @@ public class BoardServiceImpl implements BoardService {
         if(validateLastIterationColumn(board, typeCheck, line, column)) {
             if (lineValues.size() == (board.getBoardSize() - 1)) {
                 if (StringUtils.checkSameValues(lineValues)) {
-                    board.getBoard()[voidPosition[0]][voidPosition[1]] = board.getSymbolComputer();
+                    if(typeCheck.equals(ConstsEnum.BOARD_LINE.getValue())){
+                        markPosition(board, board.getSymbolComputer(), new Integer[]{voidPosition[0], voidPosition[1]});
+                    }else if(typeCheck.equals(ConstsEnum.BOARD_COLUMN.getValue())){
+                        markPosition(board, board.getSymbolComputer(), new Integer[]{voidPosition[1], voidPosition[0]});
+                    }
                     result = true;
                 }
             }
